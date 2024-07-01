@@ -1,14 +1,7 @@
 const { Pool } = require('pg');
-
+require('dotenv').config();
 const pool = new Pool({
-    user: 'default',
-    host: 'ep-quiet-grass-a4buaqpp-pooler.us-east-1.aws.neon.tech',
-    database: 'airport_db',
-    password: 'z2auKrgC7vWZ',
-    port: 5432,
-    ssl: {
-        rejectUnauthorized: false,
-    }
+    connectionString: process.env.POSTGRES_URL,
 });
 
 module.exports = pool;
