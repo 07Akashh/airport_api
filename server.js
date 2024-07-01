@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+require('dotenv').config();
 
 const airportRoute = require('./routes/airport');
 
@@ -13,6 +13,6 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
