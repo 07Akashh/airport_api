@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db');
+const Airport = require('../models/airport.model');
+const City = require('../models/city.model');
+const Country = require('../models/country.model');
 
 router.get('/', async (req, res, next) => {
     const iataCode = req.query.iata_code;
@@ -10,36 +12,18 @@ router.get('/', async (req, res, next) => {
     }
 
     try {
-        const airportResult = await pool.query(
-            `SELECT * FROM Airport WHERE iata_code = $1`,
-            [iataCode]
-        );
+        const airport = await Airport.findByIATACode(iataCode);
 
-        if (airportResult.rows.length === 0) {
+        if (!airport) {
             return res.status(404).json({ error: 'Airport not found' });
         }
-
-        const airport = airportResult.rows[0];
 
         let city = {};
         let country = {};
 
         if (airport.city_id) {
-            const cityResult = await pool.query(
-                `SELECT * FROM City WHERE id = $1`,
-                [airport.city_id]
-            );
-
-            if (cityResult.rows.length > 0) {
-                city = {
-                    id: cityResult.rows[0].id,
-                    name: cityResult.rows[0].name,
-                    country_id: cityResult.rows[0].country_id,
-                    is_active: cityResult.rows[0].is_active,
-                    lat: cityResult.rows[0].lat,
-                    long: cityResult.rows[0].long,
-                };
-            } else {
+            city = await City.findById(airport.city_id);
+            if (!city) {
                 city = { id: airport.city_id, name: 'City not available', country_id: null };
             }
         } else {
@@ -47,21 +31,8 @@ router.get('/', async (req, res, next) => {
         }
 
         if (city.country_id) {
-            const countryResult = await pool.query(
-                `SELECT * FROM Country WHERE id = $1`,
-                [city.country_id]
-            );
-
-            if (countryResult.rows.length > 0) {
-                country = {
-                    id: countryResult.rows[0].id,
-                    name: countryResult.rows[0].name,
-                    country_code_two: countryResult.rows[0].country_code_two,
-                    country_code_three: countryResult.rows[0].country_code_three,
-                    mobile_code: countryResult.rows[0].mobile_code,
-                    continent_id: countryResult.rows[0].continent_id,
-                };
-            } else {
+            country = await Country.findById(city.country_id);
+            if (!country) {
                 country = { id: city.country_id, name: 'Country not available' };
             }
         } else {
