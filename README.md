@@ -8,10 +8,10 @@ The Airport API project includes a GET endpoint that enables users to retrieve d
    - [City](#city)
    - [Country](#country)
 2. [API Endpoints](#api-endpoints)
-   - [GET /api/airport](#get-api-airport)
+   - [GET /api/airport](#get-apiairport)
 3. [Installation](#installation)
 4. [How to Run](#how-to-run)
-5. [API URL](#api-endpoint)
+5. [API Endpoint URL](#api-url)
 6. [Example output](#example-output)
 7. [Contributing](#contributing)
 8. [License](#license)
@@ -70,14 +70,27 @@ cd airport_api
 # install node modules and dependencies
 npm install
 ```
+### Installation For Docker 
+To install the docker image first please ensure you have installed docker.
+```bash
+# pull Docker Image
+docker pull rahulksoftdev/airport-api
+```
 ## How to Run
 To start or run your application, use the following command:
 
 ```bash
 # Run the API by using these codes
 node server.js
+```
 or
+```bash
 npm start
+```
+### Run in Docker
+To run in docker you can run the image from gui docker software or by running this comand 
+```bash
+docker run -d -p 3000:3000 --name airport-api-container rahulksoftdev/airport-api
 ```
 ## API URL
 ```bash
