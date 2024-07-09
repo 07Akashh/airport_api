@@ -3,55 +3,17 @@ const app = express();
 require('dotenv').config();
 
 const airportRoute = require('./routes/airport');
+const { router: keepAliveRouter, keepAlive } = require('./routes/keepAlive');
+const errorHandlingMiddleware = require('./middleware/errorHandling');
 
 app.use(express.json());
 
 app.use('/api/airport', airportRoute);
+app.use('/', keepAliveRouter);
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: 'Internal server error' });
-});
+app.use(errorHandlingMiddleware);
 
-
-
-exports.handler = async (event, context) => {
-    const req = {
-        method: event.httpMethod,
-        body: event.body,
-        query: event.queryStringParameters,
-        headers: event.headers,
-    };
-    const res = {
-        headers: {},
-        statusCode: 200,
-        body: '',
-    };
-
-    try {
-        await new Promise((resolve, reject) => {
-            app(req, res, (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
-        return {
-            statusCode: res.statusCode,
-            headers: res.headers,
-            body: res.body,
-        };
-    } catch (err) {
-        return {
-            statusCode: 500,
-            headers: {},
-            body: JSON.stringify({ error: 'Internal server error' }),
-        };
-    }
-};
-
+setInterval(keepAlive, 2 * 1000);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT}`);
