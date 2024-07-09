@@ -1,6 +1,7 @@
 # Assignment for the nodeJS internship
 The Airport API project includes a GET endpoint that enables users to retrieve detailed information about airports by searching with an IATA code. The API provides comprehensive details such as the airport's name, location coordinates, elevation, and associated city and country information. This allows users to conveniently access specific airport data integrated with city and country details. 
-onine link: https://airport-api-b9j5.onrender.com/api/airport?iata_code=LKO
+
+Online link: https://airport-api-b9j5.onrender.com/api/airport?iata_code=LKO
 
 ## Table of Contents
 
